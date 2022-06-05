@@ -7,9 +7,14 @@ from PyQt5.uic import loadUi
 
 
 class ApplicationWindow(QMainWindow):
+    
+    
     def __init__(self):
         super(ApplicationWindow, self).__init__()
         loadUi("MainWindow.ui", self)
+
+        self.running = 0
+        self.plaintext = ""
 
         self.LoadPlaintextButton.clicked.connect(self.loadplaintext)
         self.LoadCiphertextButton.clicked.connect(self.loadciphertext)
@@ -23,6 +28,10 @@ class ApplicationWindow(QMainWindow):
     def loadplaintext(self):
         fname = QFileDialog.getOpenFileName(self, 'Choose Plain Text', directory='', filter='Text files (*.txt)')
         
+        with open(fname[0], 'r') as fp:
+            self.plaintext = fp.read()
+
+        print(self.plaintext)
     
     def loadciphertext(self):
         pass
@@ -34,10 +43,12 @@ class ApplicationWindow(QMainWindow):
         pass
 
     def encryptfunction(self):
-        pass
+        self.running = 1
+        self.running = 0
     
     def decryptfunction(self):
-        pass
+        self.running = 1
+        self.running = 0
 
 
 
