@@ -27,9 +27,9 @@ color: rgb(204, 204, 204);</string>
       <height>411</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="InputLayout">
      <item>
-      <widget class="QPlainTextEdit" name="CipherInput">
+      <widget class="QPlainTextEdit" name="PlaintextInput">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(204, 204, 204);
 color: rgb(0, 0, 0);</string>
@@ -40,15 +40,16 @@ color: rgb(0, 0, 0);</string>
       </widget>
      </item>
      <item>
-      <widget class="QPlainTextEdit" name="PlainInput">
+      <widget class="QPlainTextEdit" name="CiphertextInput">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(204, 204, 204);</string>
+        <string notr="true">background-color: rgb(204, 204, 204);
+color: rgb(0, 0, 0);</string>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="LoadPlaintextButton">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -61,7 +62,7 @@ color: rgb(0, 0, 0);</string>
      <string>Load Plaintext</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="TitleLabel">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -100,7 +101,7 @@ color: rgb(0, 0, 0);</string>
      <string>Ciphertext</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="LoadCiphertextButton">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -139,7 +140,7 @@ color: rgb(0, 0, 0);</string>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="SavePlaintextButton">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -152,7 +153,7 @@ color: rgb(0, 0, 0);</string>
      <string>Save Plaintext</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="SaveCiphertextButton">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -165,7 +166,7 @@ color: rgb(0, 0, 0);</string>
      <string>Save Ciphertext</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="EncryptButton">
     <property name="geometry">
      <rect>
       <x>260</x>
@@ -178,7 +179,7 @@ color: rgb(0, 0, 0);</string>
      <string>Encrypt</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_6">
+   <widget class="QPushButton" name="DecryptButton">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -188,7 +189,7 @@ color: rgb(0, 0, 0);</string>
      </rect>
     </property>
     <property name="text">
-     <string>Encrypt</string>
+     <string>Decrypt</string>
     </property>
    </widget>
   </widget>
