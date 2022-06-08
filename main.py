@@ -1,13 +1,12 @@
+from re import L
 import sys
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QFileDialog, QMessageBox
 from PyQt5.uic import loadUi
 
 
-
 class ApplicationWindow(QMainWindow):
-    
     
     def __init__(self):
         super(ApplicationWindow, self).__init__()
@@ -15,6 +14,7 @@ class ApplicationWindow(QMainWindow):
 
         self.running = 0
         self.plaintext = ""
+        self.ciphertext = ""
 
         self.LoadPlaintextButton.clicked.connect(self.loadplaintext)
         self.LoadCiphertextButton.clicked.connect(self.loadciphertext)
@@ -25,22 +25,60 @@ class ApplicationWindow(QMainWindow):
         self.DecryptButton.clicked.connect(self.decryptfunction)
         self.EncryptButton.clicked.connect(self.encryptfunction)
 
+    def showErrorDialog(self, title, content):
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle(title)
+        dlg.setText(content)
+
+        dlg.exec()
+
     def loadplaintext(self):
-        fname = QFileDialog.getOpenFileName(self, 'Choose Plain Text', directory='', filter='Text files (*.txt)')
         
-        with open(fname[0], 'r') as fp:
-            self.plaintext = fp.read()
+        fname = QFileDialog.getOpenFileName(self, 'Choose Plain Text', directory='', filter='Text files (*.txt)')
+         
+        try:
+            with open(fname[0], 'r') as fp:
+                self.plaintext = fp.read()
+        except FileNotFoundError:
+            self.showErrorDialog("File Error", "File not found or invalid path!")
+            print("File not found error!")
+            return
+        except:
+            self.showErrorDialog("File Error", "Unexpected File error has occured!")
+            print("Error: Could not load file")
+            return
 
         print(self.plaintext)
     
     def loadciphertext(self):
-        pass
+
+        fname = QFileDialog.getOpenFileName(self, 'Choose Plain Text', directory='', filter='Text files (*.txt)')
+        
+        try:
+            with open(fname[0], 'r') as fp:
+                self.ciphertext = fp.read()
+        except FileNotFoundError:
+            
+            self.showErrorDialog("File Error", "File not found or invalid path!")
+
+            print("File not found error!")
+            return
+        except:
+
+            self.showErrorDialog("File Error", "Unexpected File error has occured!")
+
+            print("Error: Could not load file")
+            return
+            
+        print(self.ciphertext)
     
     def saveplaintext(self):
         pass
 
     def saveciphertext(self):
         pass
+    
+    
 
     def encryptfunction(self):
         self.running = 1
@@ -49,6 +87,7 @@ class ApplicationWindow(QMainWindow):
     def decryptfunction(self):
         self.running = 1
         self.running = 0
+
 
 
 
