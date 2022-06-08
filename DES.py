@@ -1,11 +1,13 @@
 
 roundKeys = []
 
+initialp = []
+finalp = []
 
-def encrypt():
+def encrypt(plain64):
     pass
 
-def decrypt():
+def decrypt(cipher64):
     pass
 
 def roundKeyGenerator(key56):
