@@ -1,10 +1,11 @@
-from re import L
+
 import sys
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QFileDialog, QMessageBox
 from PyQt5.uic import loadUi
 
+import DES
 
 class ApplicationWindow(QMainWindow):
     
@@ -15,6 +16,7 @@ class ApplicationWindow(QMainWindow):
         self.running = 0
         self.plaintext = ""
         self.ciphertext = ""
+        self.keytext = ""
 
         #Connecting buttons to functions
         self.LoadPlaintextButton.clicked.connect(self.loadplaintext)
@@ -26,10 +28,12 @@ class ApplicationWindow(QMainWindow):
         self.DecryptButton.clicked.connect(self.decryptfunction)
         self.EncryptButton.clicked.connect(self.encryptfunction)
 
+        #Place Holder Text
         self.KeyInput.setPlaceholderText("AAAAAAAAAAAAAA")
+        
 
     #Abstracting error dialog
-    def showErrorDialog(self, title, content):
+    def showErrorDialog(self, title : str, content : str):
         dlg = QMessageBox(self)
         dlg.setWindowTitle(title)
         dlg.setText(content)
@@ -82,6 +86,9 @@ class ApplicationWindow(QMainWindow):
         print(self.ciphertext)
         self.CiphertextInput.setPlainText(self.ciphertext)
     
+    def loadkey(self):
+        pass
+
     #Saving functions
     def saveplaintext(self):
         pass
@@ -89,19 +96,88 @@ class ApplicationWindow(QMainWindow):
     def saveciphertext(self):
         pass
     
+    #Checking Conditions
+    
+    # Checks all conditions for encryption - True is Valid, False if Invalid
+    def checkEncryptionConditions(self):
+        try:
+            DES.checkKey(self.keytext)
+        except DES.InvalidDESKeyLengthException as e:
+            self.showErrorDialog('Key Error', 'Invalid Key Length')
+            return False
+        except DES.InvalidDESKeyException as e:
+            self.showErrorDialog('Key Error', 'Invalid Key Character')
+            return False
+
+        return True
+
+    #Checks all conditions for decryption
+    def checkDecryptionConditions(self):
+        try:
+            DES.checkKey(self.keytext)
+        except DES.InvalidDESKeyLengthException as e:
+            self.showErrorDialog('Key Error', 'Invalid Key Length')
+            return False
+        except DES.InvalidDESKeyException as e:
+            self.showErrorDialog('Key Error', 'Invalid Key Character')
+            return False
+
+        return True
+
     def encryptfunction(self):
         if self.running == 1:
+            print("Already Running! Returning")
             return
         
         self.running = 1
+        print("Running Encryption...")
+
+        self.plaintext = self.PlaintextInput.toPlainText()
+        print(f'Plaintext set to : {self.plaintext}')
+        self.keytext = self.KeyInput.text()
+        print(f'Keytext is set to: {self.keytext}')
+
+
+        if not self.checkEncryptionConditions():
+            print("Do not meet conditions.")
+            self.running = 0
+            return
 
         
+        
+        self.ciphertext = DES.encrypt(self.plaintext)
+        print("Setting new ciphertext")
+        self.CiphertextInput.setPlainText(self.ciphertext)
 
         self.running = 0
+        print("Encryption Done...")
     
     def decryptfunction(self):
+        if self.running == 1:
+            print("Already Running! Returning")
+            return
+
         self.running = 1
+        print("Running Decryption...")
+
+        self.ciphertext = self.CiphertextInput.toPlainText()
+        print(f'Ciphertext set to : {self.ciphertext}')
+        self.keytext = self.KeyInput.text()
+        print(f'Keytext is set to: {self.keytext}')
+
+
+        if not self.checkDecryptionConditions():
+            print("Do not meet conditions.")
+            self.running = 0
+            return
+
+        self.plaintext = DES.decrypt(self.ciphertext)
+
+        print("Set new plaintext")
+        self.PlaintextInput.setPlainText(self.plaintext)
+
         self.running = 0
+        print("Decryption Done...")
 
 
 
