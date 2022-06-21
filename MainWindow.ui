@@ -198,6 +198,32 @@ color: rgb(0, 0, 0);</string>
      <string>Decrypt</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="ClearPlaintextButton">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>50</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ClearCiphertextButton">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>50</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

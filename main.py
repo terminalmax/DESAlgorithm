@@ -28,7 +28,10 @@ class ApplicationWindow(QMainWindow):
         self.DecryptButton.clicked.connect(self.decryptfunction)
         self.EncryptButton.clicked.connect(self.encryptfunction)
 
-        #Place Holder Text
+        self.ClearPlaintextButton.clicked.connect(self.clearPlaintextInput)
+        self.ClearCiphertextButton.clicked.connect(self.clearCiphertextInput)
+
+        #Placeholder Text
         self.KeyInput.setPlaceholderText("AAAAAAAAAAAAAA")
         self.KeyInput.setMaxLength(14)
         
@@ -89,6 +92,11 @@ class ApplicationWindow(QMainWindow):
     
     def loadkey(self):
         pass
+    
+    def clearPlaintextInput(self):
+        self.PlaintextInput.clear()
+    def clearCiphertextInput(self):
+        self.CiphertextInput.clear()
 
     #Saving functions
     def saveplaintext(self):
