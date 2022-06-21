@@ -1,5 +1,6 @@
 
 import sys
+from tkinter import N
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QFileDialog, QMessageBox
@@ -109,6 +110,10 @@ class ApplicationWindow(QMainWindow):
             self.showErrorDialog('Key Error', 'Invalid Key Character')
             return False
 
+        if self.plaintext == '' or self.plaintext is None:
+            self.showErrorDialog('Plain Text Error', 'Empty Plain Text')
+            return False
+
         return True
 
     #Checks all conditions for decryption
@@ -122,30 +127,35 @@ class ApplicationWindow(QMainWindow):
             self.showErrorDialog('Key Error', 'Invalid Key Character')
             return False
 
+        if self.ciphertext == '' or self.ciphertext is None:
+            self.showErrorDialog('Cipher Text Error', 'Empty Cipher Text')
+            return False
+
         return True
 
     def encryptfunction(self):
         if self.running == 1:
             print("Already Running! Returning")
             return
-        
         self.running = 1
         print("Running Encryption...")
 
+
+        # Fetch Plaintext and Key
         self.plaintext = self.PlaintextInput.toPlainText()
         print(f'Plaintext set to : {self.plaintext}')
         self.keytext = self.KeyInput.text()
         print(f'Keytext is set to: {self.keytext}')
 
-
+        # Check all conditions for encryption
         if not self.checkEncryptionConditions():
             print("Do not meet conditions.")
             self.running = 0
             return
 
+        # Encrypt
+        self.ciphertext = DES.encryption(self.plaintext, self.keytext)
         
-        
-        self.ciphertext = DES.encrypt(self.plaintext)
         print("Setting new ciphertext")
         self.CiphertextInput.setPlainText(self.ciphertext)
 
@@ -160,26 +170,26 @@ class ApplicationWindow(QMainWindow):
         self.running = 1
         print("Running Decryption...")
 
+        # Fetch Ciphertext and Key
         self.ciphertext = self.CiphertextInput.toPlainText()
         print(f'Ciphertext set to : {self.ciphertext}')
         self.keytext = self.KeyInput.text()
         print(f'Keytext is set to: {self.keytext}')
 
-
+        # Check all conditions for decryption
         if not self.checkDecryptionConditions():
             print("Do not meet conditions.")
             self.running = 0
             return
 
-        self.plaintext = DES.decrypt(self.ciphertext)
+        # Decrypt
+        self.plaintext = DES.decryption(self.ciphertext, self.keytext)
 
         print("Set new plaintext")
         self.PlaintextInput.setPlainText(self.plaintext)
 
         self.running = 0
         print("Decryption Done...")
-
-
 
 
 app = QApplication(sys.argv)
