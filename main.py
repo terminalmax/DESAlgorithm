@@ -1,11 +1,76 @@
 
 import sys
 
+import json
+
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QFileDialog, QMessageBox
 from PyQt5.uic import loadUi
 
 import DES
+
+selected_key = ""
+
+class KeySelectionDialog(QDialog):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        loadUi('KeySelectionDialog.ui',self)
+
+        self.keylist = {}
+
+        self.buttonBox.accepted.connect(self.keySelected)
+        self.buttonBox.rejected.connect(self.keyRejected)
+        self.DeleteKeyButton.clicked.connect(self.keyDeleted)
+
+        try:
+            with open('KeyList.json', 'r') as fp:
+                self.keylist = json.load(fp)
+
+                for key in self.keylist['Keys']:
+                    self.KeyListWidget.addItem(key)
+
+        except:
+            print("Key List not found!")
+            with open('KeyList.json', 'w') as fp:
+                pass
+            pass
+
+        self.KeyListWidget.clicked.connect(self.keyclicked)
+
+    def keyclicked(self, qmodelindex):
+        key = self.KeyListWidget.currentItem()
+
+        if key.text() == '' or key.text() is None:
+            return
+
+        self.KeyLineEdit.setText(key.text())
+
+    def keySelected(self):
+        global selected_key
+        selected_key = self.KeyLineEdit.text()
+
+    def keyRejected(self):
+        global selected_key
+        selected_key = ""
+
+    def keyDeleted(self):
+        
+        if self.KeyLineEdit.text() == '':
+            return
+
+        self.KeyListWidget.clear()
+
+        self.keylist['Keys'].remove(self.KeyLineEdit.text())
+
+        self.KeyLineEdit.setText('')
+
+        for key in self.keylist['Keys']:
+            self.KeyListWidget.addItem(key)
+        
+        with open('KeyList.json', 'w') as fp:
+            json.dump(self.keylist,fp)
+
+
 
 class ApplicationWindow(QMainWindow):
     
@@ -30,6 +95,9 @@ class ApplicationWindow(QMainWindow):
 
         self.ClearPlaintextButton.clicked.connect(self.clearPlaintextInput)
         self.ClearCiphertextButton.clicked.connect(self.clearCiphertextInput)
+
+        self.LoadKeyButton.clicked.connect(self.loadkey)
+        self.SaveKeyButton.clicked.connect(self.saveKey)
 
         #Placeholder Text
         self.KeyInput.setPlaceholderText("AAAAAAAAAAAAAA")
@@ -91,7 +159,46 @@ class ApplicationWindow(QMainWindow):
         self.CiphertextInput.setPlainText(self.ciphertext)
     
     def loadkey(self):
-        pass
+        keyLoadDialog = KeySelectionDialog(self)
+        keyLoadDialog.exec()
+
+        if selected_key is not "":
+            self.keytext = selected_key
+            self.KeyInput.setText(self.keytext)
+    
+    def saveKey(self):
+        self.keytext = self.KeyInput.text()
+
+        try:
+            DES.checkKey(self.keytext)
+        except DES.InvalidDESKeyLengthException as e:
+            self.showErrorDialog('Key Error', 'Invalid Key Length')
+            return 
+        except DES.InvalidDESKeyException as e:
+            self.showErrorDialog('Key Error', 'Invalid Key Character')
+            return
+        
+        keylist = {"Keys":[]}
+
+        try:
+            with open('KeyList.json', 'r') as fp:
+                keylist = json.load(fp)
+
+                if self.keytext not in keylist["Keys"]:
+                    keylist["Keys"].append(self.keytext)
+                else:
+                    print("Key already in list!")
+                    self.showErrorDialog('Key Error', 'Key Already in List')
+                    return
+        except:
+            print("Key List not found!")
+            keylist["Keys"] = [self.keytext]
+            
+        with open('KeyList.json', 'w') as fp:
+                json.dump(keylist,fp)
+            
+        
+
     
     def clearPlaintextInput(self):
         self.PlaintextInput.clear()
