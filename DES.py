@@ -217,6 +217,7 @@ def checkKey(keyHEX : str) -> str:
 #Permuation Function
 def permutation(input: str, box : list) -> str:
     output = ''
+    #print(input)
     for i in range(len(box)):
         output = output + input[box[i] - 1]
     return output
@@ -254,18 +255,22 @@ def encryption(plaintext : str, keyHEX : str) -> str:
     print(f"Plaintext in HEX : {plaintextHEX}")
 
     plaintextBinary = hexToBin(plaintextHEX)
-    print(f"Plaintext in binary: {plaintextBinary}")
+    #print(f"Plaintext in binary: {plaintextBinary}")
 
-    blocks64 = []
-    ####################
-    # Insert code to break text into blocks
-    ###################
+    # Encrypt blockwise
+    for i in range (0, len(plaintextBinary), 64):
 
-    ciphertextBinary = encrypt(plaintextBinary)
-    print(f"Cipher Text in Binary is: {ciphertextBinary}")
-    ciphertextHEX = ciphertextHEX + binToHex(ciphertextBinary)
+        block = plaintextBinary[i:i+64]
+
+        if len(block) != 64:
+            print("Padding while encrypting!")
+            block = block + ('00100000' * (64 - len(block)))
+
+        ciphertextBinary = encrypt(block)
+        #print(f"Cipher Text in Binary is: {ciphertextBinary}")
+        ciphertextHEX = ciphertextHEX + binToHex(ciphertextBinary)
+        
     print(f"Cipher Text in Hex is: {ciphertextHEX}")
-
     return ciphertextHEX
 
 def decryption(ciphertext : str, keyHEX : str) -> str:
@@ -274,6 +279,7 @@ def decryption(ciphertext : str, keyHEX : str) -> str:
     resetState()
 
     plaintext = ''
+    plaintextHEX = ''
 
     # Generating Round Keys
     roundKeyGenerator(keyHEX)
@@ -281,17 +287,25 @@ def decryption(ciphertext : str, keyHEX : str) -> str:
 
     ciphertextHEX = ciphertext #textToHex(ciphertext)
     ciphertextBinary = hexToBin(ciphertextHEX)
-    print(f"Cipher Text in binary is :{ciphertextBinary}")
+    #print(f"Cipher Text in binary is :{ciphertextBinary}")
 
-    
+    # Decrypting blockwise
+    for i in range(0, len(ciphertextBinary), 64):
 
-    # Decryption
-    plaintextBinary = encrypt(ciphertextBinary)
-    print(f"Plain text in binary is: {plaintextBinary}")
-    plaintextHEX = binToHex(plaintextBinary)
-    print(f"Plain text in hex is: {plaintextHEX}")
+        block = ciphertextBinary[i:i+64]
+
+        if len(block) != 64:
+            print("Padding while decrypting!")
+            block = block + ('00100000' * (64 - len(block)))
+
+        plaintextBinary = encrypt(block)
+
+        #print(f"Plain text in binary is: {plaintextBinary}")
+        plaintextHEX = plaintextHEX + binToHex(plaintextBinary)
+        
+    print(f"Plain text in hex is: {plaintextHEX}") 
     plaintext = hexToText(plaintextHEX)
-    print(f"Plain text in binary is: {plaintext}")
+    print(f"Plain text is: {plaintext}")
 
     return plaintext
 
