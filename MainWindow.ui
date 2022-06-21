@@ -134,7 +134,7 @@ color: rgb(0, 0, 0);</string>
      <item>
       <widget class="QLineEdit" name="KeyInput">
        <property name="text">
-        <string>AA AA AA AA AA AA AA</string>
+        <string/>
        </property>
       </widget>
      </item>
