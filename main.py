@@ -30,6 +30,7 @@ class ApplicationWindow(QMainWindow):
 
         #Place Holder Text
         self.KeyInput.setPlaceholderText("AAAAAAAAAAAAAA")
+        self.KeyInput.setMaxLength(14)
         
 
     #Abstracting error dialog
@@ -66,7 +67,7 @@ class ApplicationWindow(QMainWindow):
     
     def loadciphertext(self):
 
-        fname = QFileDialog.getOpenFileName(self, 'Choose Plain Text', directory='', filter='Text files (*.txt)')
+        fname = QFileDialog.getOpenFileName(self, caption='Choose Plain Text', directory='', filter='Text files (*.txt)')
         
         if fname[0] == '':
             return
@@ -91,10 +92,43 @@ class ApplicationWindow(QMainWindow):
 
     #Saving functions
     def saveplaintext(self):
-        pass
+
+        self.plaintext = self.PlaintextInput.toPlainText()
+
+        if self.plaintext == '' or self.plaintext is None:
+            self.showErrorDialog('Plain Text Error', 'Plaintext is empty')
+            return
+
+        fname = QFileDialog.getSaveFileName(self,caption="Save File",directory='./',filter='Text File (*.txt)')
+        print(fname)
+        if fname[0] == '':
+            return
+
+        try:
+            with open(fname[0], 'w') as fp:
+                fp.write(self.plaintext)
+        except:
+            print("File write error")
+            return
 
     def saveciphertext(self):
-        pass
+        self.ciphertext = self.CiphertextInput.toPlainText()
+
+        if self.ciphertext == '' or self.plaintext is None:
+            self.showErrorDialog('Cipher Text Error', 'Ciphertext is Empty')
+            return
+        
+        fname = QFileDialog.getSaveFileName(self,caption="Save File",directory='./',filter='Text File (*.txt)')
+        print(fname)
+        if fname[0] == '':
+            return
+        
+        try:
+            with open(fname[0], 'w') as fp:
+                fp.write(self.ciphertext)
+        except:
+            print("File write error")
+            return
     
     #Checking Conditions
     
