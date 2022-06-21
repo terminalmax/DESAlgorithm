@@ -1,6 +1,5 @@
 
 import sys
-from tkinter import N
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QDialog, QApplication, QFileDialog, QMessageBox
@@ -198,8 +197,8 @@ mainwindow = ApplicationWindow()
 widget = QtWidgets.QStackedWidget()
 widget.addWidget(mainwindow)
 
-widget.setFixedWidth(1200)
-widget.setFixedHeight(800)
+widget.setFixedWidth(800)
+widget.setFixedHeight(700)
 
 widget.show()
 
